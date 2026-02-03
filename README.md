@@ -78,7 +78,7 @@ python train.py \
 ---
 
 ## Experiments Reproduction
-All results are available at [Google Drive](https://drive.google.com/drive/folders/1gcsWy8hSoQdPl1BA4DvekTO_fitSxcp3?usp=sharing)
+All results are available at [Google Drive](https://drive.google.com/drive/folders/1gcsWy8hSoQdPl1BA4DvekTO_fitSxcp3?usp=sharing).
 ### Exp1 – Regularisation
 
 ```bash
