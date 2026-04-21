@@ -22,6 +22,7 @@ def make_run_name(args):
         f"tauPi={args.dqn_tau}",
         f"tauStar={args.tau_star}",
         f"seed={args.seed}",
+        f"gap={'eval' if args.expected_rational_gap == 'evaluated policy' else 'opt'}",
     ]
     return "_".join(parts)
 
@@ -72,6 +73,13 @@ def main():
     
     parser.add_argument("--experiment", type=str, default="exp_test", help="experiment name (e.g. exp1_main, exp2_ablation)")
     parser.add_argument("--variable", type=str, default="default", help="variable name (e.g. reg)")
+    parser.add_argument(
+        "--expected_rational_gap",
+        type=str,
+        choices=["evaluated policy", "optimal policy"],
+        default="optimal policy",
+        help="state distribution to use for the expected rational gap: 'optimal policy' (d_h^{pi_circ}) or 'evaluated policy' (d_h^{pi})",
+    )
 
     args = parser.parse_args()
 
@@ -139,6 +147,7 @@ def main():
                 weightnorm=args.weightnorm,
                 l2_coef=args.l2_coef,
                 logger=logger,
+                gap_method=args.expected_rational_gap,
             )
         else:
             print("Another training not yet implemented.")

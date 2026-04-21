@@ -12,7 +12,8 @@ from src.utils.utils import (
     sample_pi_star_actions_h,
     sample_dqn_policy_actions_h,
     build_Ppi_h,
-    calculate_expected_rational_gap,
+    calculate_expected_rational_gap_optimal,
+    calculate_expected_rational_gap_evaluated,
     calculate_empirical_rational_gap,
     EmpiricalGapSum,
 )
@@ -47,6 +48,7 @@ def run_dqn(
     weightnorm=False,
     l2_coef=0.0,
     logger=None,
+    gap_method="optimal policy",
 ):
     set_global_seed(seed)
 
@@ -187,8 +189,12 @@ def run_dqn(
                     - exp.Q_star_infer_h[h, np.arange(nS), a_pi_h[h]]
                 )
 
-            Ppi_h = build_Ppi_h(exp.P_infer, nS, a_circ_h, H)
-            exp_risk_gap = calculate_expected_rational_gap(Ppi_h, exp.d0_inf, g_h)
+            if gap_method == "evaluated policy":
+                Ppi_h = build_Ppi_h(exp.P_infer, nS, a_pi_h, H)
+                exp_risk_gap = calculate_expected_rational_gap_evaluated(Ppi_h, exp.d0_inf, g_h)
+            else:
+                Ppi_h = build_Ppi_h(exp.P_infer, nS, a_circ_h, H)
+                exp_risk_gap = calculate_expected_rational_gap_optimal(Ppi_h, exp.d0_inf, g_h)
 
             ep_emp_risk = calculate_empirical_rational_gap(
                 states=ep_states,

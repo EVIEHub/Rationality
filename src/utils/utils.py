@@ -100,10 +100,9 @@ def build_Ppi_h(P_infer, nS, a_circ_h, H):
     return mats
 
 
-def calculate_expected_rational_gap(Ppi_h, d0, g_h, tol=1e-12):
+def _expected_rational_gap(Ppi_h, d0, g_h, tol=1e-12):
     H = len(Ppi_h)
     nS = g_h.shape[1]
-    terminal = nS
     nS_ext = nS + 1
 
     D = np.zeros(nS_ext, dtype=np.float64)
@@ -112,15 +111,19 @@ def calculate_expected_rational_gap(Ppi_h, d0, g_h, tol=1e-12):
     total = 0.0
     for h in range(H):
         total += float(D[:nS] @ g_h[h])
-
-        alive = D[:nS].sum()
-        if alive < tol:
+        if D[:nS].sum() < tol:
             break
-
-
-        D = D @ Ppi_h[h] 
+        D = D @ Ppi_h[h]
 
     return total
+
+
+def calculate_expected_rational_gap_optimal(Ppi_circ_h, d0, g_h, tol=1e-12):
+    return _expected_rational_gap(Ppi_circ_h, d0, g_h, tol)
+
+
+def calculate_expected_rational_gap_evaluated(Ppi_h, d0, g_h, tol=1e-12):
+    return _expected_rational_gap(Ppi_h, d0, g_h, tol)
 
 def calculate_empirical_rational_gap(
     states, dones,
